@@ -360,18 +360,18 @@ class Plane {
         this.normal.negate();
         this.w = -this.w;
     }
-    // Split `polygon` by this plane if needed, then put the polygon or polygon
-    // fragments in the appropriate lists. Coplanar polygons go into either
-    // `coplanarFront` or `coplanarBack` depending on their orientation with
-    // respect to this plane. Polygons in front or in back of this plane go into
-    // either `front` or `back`.
+    // Divide `polígono` por este plano si es necesario, luego coloca el polígono o polígono
+    // fragmentos en las listas apropiadas. Los polígonos coplanares entran en cualquiera de los dos
+    // `coplanarFront` o `coplanarBack` dependiendo de su orientación con
+    // respecto a este plano. Los polígonos delante o detrás de este plano entran en
+    // ya sea `frontal` o `posterior`.
     splitPolygon(polygon, coplanarFront, coplanarBack, front, back) {
         const COPLANAR = 0;
         const FRONT = 1;
         const BACK = 2;
         const SPANNING = 3;
-        // Classify each point as well as the entire polygon into one of the above
-        // four classes.
+        // Clasifica cada punto así como el polígono completo en uno de los anteriores
+        // cuatro clases.
         let polygonType = 0;
         let types = [];
         for (let i = 0; i < polygon.vertices.length; i++) {
