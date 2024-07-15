@@ -225,7 +225,6 @@ document.getElementById("unirSTL").addEventListener("click", function () {
     unirSTL();
 });
 
-
 document.getElementById("descargarPruebaStl").addEventListener("click", function () {
     descargarStl(scene, "pruebaSTL");
 });
