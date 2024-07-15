@@ -346,8 +346,8 @@ class Vertex {
         return new Vertex(this.pos.clone().lerp(other.pos, t), this.normal.clone().lerp(other.normal, t), this.uv && other.uv && this.uv.clone().lerp(other.uv, t), this.color && other.color && this.color.clone().lerp(other.color, t));
     }
 }
-// # class Plane
-// Represents a plane in 3D space.
+// # clase Plano
+// Representa un plano en el espacio 3D.
 class Plane {
     constructor(normal, w) {
         this.normal = normal;
