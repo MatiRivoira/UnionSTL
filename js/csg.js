@@ -312,17 +312,18 @@ class Vector {
         return this.x * b.x + this.y * b.y + this.z * b.z;
     }
 }
-//Temporaries used to avoid internal allocation..
+
+//Temporales utilizados para evitar la asignación interna.
 Vector.tv0 = new Vector();
 Vector.tv1 = new Vector();
-// # class Vertex
-// Represents a vertex of a polygon. Use your own vertex class instead of this
-// one to provide additional features like texture coordinates and vertex
-// colors. Custom vertex classes need to provide a `pos` property and `clone()`,
-// `flip()`, and `interpolate()` methods that behave analogous to the ones
-// defined by `CSG.Vertex`. This class provides `normal` so convenience
-// functions like `CSG.sphere()` can return a smooth vertex normal, but `normal`
-// is not used anywhere else.
+// # clase Vértice
+// Representa un vértice de un polígono. Utilice su propia clase de vértice en lugar de esta
+// uno para proporcionar características adicionales como coordenadas de textura y vértices
+// colores. Las clases de vértices personalizadas deben proporcionar una propiedad `pos` y `clone()`,
+// métodos `flip()` e `interpolate()` que se comportan de forma análoga a los
+// definido por `CSG.Vertex`. Esta clase proporciona comodidad "normal".
+// funciones como `CSG.sphere()` pueden devolver un vértice suave normal, pero `normal`
+// no se usa en ningún otro lugar.
 class Vertex {
     constructor(pos, normal, uv, color) {
         this.pos = new Vector().copy(pos);
