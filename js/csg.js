@@ -425,15 +425,15 @@ Plane.fromPoints = function (a, b, c) {
     let n = Vector.tv0.copy(b).sub(a).cross(Vector.tv1.copy(c).sub(a)).normalize();
     return new Plane(n.clone(), n.dot(a));
 };
-// # class Polygon
-// Represents a convex polygon. The vertices used to initialize a polygon must
-// be coplanar and form a convex loop. They do not have to be `Vertex`
-// instances but they must behave similarly (duck typing can be used for
-// customization).
+// # clase polígono
+// Representa un polígono convexo. Los vértices utilizados para inicializar un polígono deben
+// ser coplanar y formar un bucle convexo. No tienen que ser `Vertex`
+// instancias, pero deben comportarse de manera similar (se puede usar el tipo pato para
+// personalización).
 //
-// Each convex polygon has a `shared` property, which is shared between all
-// polygons that are clones of each other or were split from the same polygon.
-// This can be used to define per-polygon properties (such as surface color).
+// Cada polígono convexo tiene una propiedad "compartida", que se comparte entre todos
+// polígonos que son clones entre sí o que se dividieron del mismo polígono.
+// Esto se puede utilizar para definir propiedades por polígono (como el color de la superficie).
 class Polygon {
     constructor(vertices, shared) {
         this.vertices = vertices;
@@ -448,12 +448,12 @@ class Polygon {
         this.plane.flip();
     }
 }
-// # class Node
-// Holds a node in a BSP tree. A BSP tree is built from a collection of polygons
-// by picking a polygon to split along. That polygon (and all other coplanar
-// polygons) are added directly to that node and the other polygons are added to
-// the front and/or back subtrees. This is not a leafy BSP tree since there is
-// no distinction between internal and leaf nodes.
+// # clase Nodo
+// Mantiene un nodo en un árbol BSP. Un árbol BSP se construye a partir de una colección de polígonos.
+// eligiendo un polígono para dividirlo. Ese polígono (y todos los demás coplanares)
+// polígonos) se agregan directamente a ese nodo y los otros polígonos se agregan a
+// los subárboles delantero y/o trasero. Este no es un árbol BSP frondoso ya que hay
+// no hay distinción entre nodos internos y hoja.
 class Node {
     constructor(polygons) {
         this.polygons = [];
