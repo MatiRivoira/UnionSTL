@@ -10,7 +10,6 @@ STL: El formato de archivo STL se utiliza para la exportación de los modelos 3D
 Clona este repositorio en tu máquina local.
 Navega hasta el directorio del proyecto.
 Abre el archivo index.html en tu navegador web.
-Explora las diferentes secciones de la página y disfruta de la experiencia de creación y compra de modelos 3D.
 
 <h2 style="font-size: 20px;">🤝 Contribuciones</h2>
 Actualmente, no se aceptan contribuciones externas para este proyecto. Sin embargo, si deseas compartir alguna sugerencia o informar sobre algún problema, puedes abrir un issue en este repositorio.
