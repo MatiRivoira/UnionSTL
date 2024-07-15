@@ -57,7 +57,7 @@ class CSG {
         return csg;
     }
 }
-// Construct a CSG solid from a list of `Polygon` instances.
+// Construye un sólido CSG a partir de una lista de instancias de `Polygon`.
 CSG.fromPolygons = function (polygons) {
     let csg = new CSG();
     csg.polygons = polygons;
