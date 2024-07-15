@@ -339,9 +339,9 @@ class Vertex {
     flip() {
         this.normal.negate();
     }
-    // Create a new vertex between this vertex and `other` by linearly
-    // interpolating all properties using a parameter of `t`. Subclasses should
-    // override this to interpolate additional properties.
+    // Crea un nuevo vértice entre este vértice y `otro` linealmente
+    // interpolando todas las propiedades usando un parámetro de `t`. Las subclases deberían
+    // anula esto para interpolar propiedades adicionales.
     interpolate(other, t) {
         return new Vertex(this.pos.clone().lerp(other.pos, t), this.normal.clone().lerp(other.normal, t), this.uv && other.uv && this.uv.clone().lerp(other.uv, t), this.color && other.color && this.color.clone().lerp(other.color, t));
     }
