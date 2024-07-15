@@ -155,22 +155,6 @@ scene.add(light)
 // Iniciar renderizacion 
 animate();
 
-function Subdividir(mesh) {
-    let params = {
-        split:          false,
-        uvSmooth:       false,
-        preserveEdges:  false,
-        flatOnly:       false,
-        maxTriangles:   124000,
-    };
-    let geometry = LoopSubdivision.modify(mesh.geometry, 2, params);
-    let material = mesh.material.clone();
-    let meshSub = new THREE.Mesh(geometry, material);
-    meshSub.name = mesh.name;
-    meshSub.rotation.set(mesh.rotation.x, mesh.rotation.y, mesh.rotation.z);
-    return meshSub;
-}
-
 const exporter = new STLExporter();
 function descargarStl(scena, nombre) {
     let stlData = exporter.parse(scena, { binary: true });
@@ -214,7 +198,7 @@ function limpiarScena() {
     }
 }
 
-document.getElementById("descargarstl").addEventListener("click", function () {
+document.getElementById("unirSTL").addEventListener("click", function () {
     unirSTL();
 });
 
