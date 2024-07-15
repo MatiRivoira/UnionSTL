@@ -306,4 +306,3 @@ document.getElementById("descargarstl").addEventListener("click", function () {
 document.getElementById("limpiar").addEventListener("click", function () {
     limpiarScena();
 });
-
