@@ -468,7 +468,7 @@ class Node {
         node.polygons = this.polygons.map((p) => p.clone());
         return node;
     }
-    // Convert solid space to empty space and empty space to solid space.
+    // Convierte espacio sólido en espacio vacío y espacio vacío en espacio sólido.
     invert() {
         for (let i = 0; i < this.polygons.length; i++)
             this.polygons[i].flip();
@@ -479,8 +479,8 @@ class Node {
         this.front = this.back;
         this.back = temp;
     }
-    // Recursively remove all polygons in `polygons` that are inside this BSP
-    // tree.
+    // Elimina recursivamente todos los polígonos en `polígonos` que están dentro de este BSP
+    // árbol.
     clipPolygons(polygons) {
         if (!this.plane)
             return polygons.slice();
@@ -497,7 +497,7 @@ class Node {
         //return front;
         return front.concat(back);
     }
-    // Remove all polygons in this BSP tree that are inside the other BSP tree
+    // Elimina todos los polígonos de este árbol BSP que están dentro del otro árbol BSP
     // `bsp`.
     clipTo(bsp) {
         this.polygons = bsp.clipPolygons(this.polygons);
@@ -506,7 +506,7 @@ class Node {
         if (this.back)
             this.back.clipTo(bsp);
     }
-    // Return a list of all polygons in this BSP tree.
+    // Devuelve una lista de todos los polígonos de este árbol BSP.
     allPolygons() {
         let polygons = this.polygons.slice();
         if (this.front)
@@ -515,10 +515,10 @@ class Node {
             polygons = polygons.concat(this.back.allPolygons());
         return polygons;
     }
-    // Build a BSP tree out of `polygons`. When called on an existing tree, the
-    // new polygons are filtered down to the bottom of the tree and become new
-    // nodes there. Each set of polygons is partitioned using the first polygon
-    // (no heuristic is used to pick a good split).
+    // Construye un árbol BSP a partir de "polígonos". Cuando se llama a un árbol existente, el
+    // los nuevos polígonos se filtran hasta la parte inferior del árbol y se vuelven nuevos
+    // nodos allí. Cada conjunto de polígonos se divide utilizando el primer polígono.
+    // (no se utiliza ninguna heurística para elegir una buena división).
     build(polygons) {
         if (!polygons.length)
             return;
@@ -544,8 +544,8 @@ Node.fromJSON = function (json) {
     return CSG.fromPolygons(json.polygons.map((p) => new Polygon(p.vertices.map((v) => new Vertex(v.pos, v.normal, v.uv)), p.shared)));
 };
 export { CSG, Vertex, Vector, Polygon, Plane };
-// Return a new CSG solid representing space in either this solid or in the
-// solid `csg`. Neither this solid nor the solid `csg` are modified.
+// Devuelve un nuevo sólido CSG que representa el espacio en este sólido o en el
+// sólido `csg`. Ni este sólido ni el sólido `csg` se modifican.
 //
 //     A.union(B)
 //
@@ -558,8 +558,8 @@ export { CSG, Vertex, Vector, Polygon, Plane };
 //          |       |            |       |
 //          +-------+            +-------+
 //
-// Return a new CSG solid representing space in this solid but not in the
-// solid `csg`. Neither this solid nor the solid `csg` are modified.
+// Devuelve un nuevo sólido CSG que representa el espacio en este sólido pero no en el
+// sólido `csg`. Ni este sólido ni el sólido `csg` se modifican.
 //
 //     A.subtract(B)
 //
@@ -572,8 +572,8 @@ export { CSG, Vertex, Vector, Polygon, Plane };
 //          |       |
 //          +-------+
 //
-// Return a new CSG solid representing space both this solid and in the
-// solid `csg`. Neither this solid nor the solid `csg` are modified.
+// Devuelve un nuevo sólido CSG que representa el espacio tanto en este sólido como en el
+// sólido `csg`. Ni este sólido ni el sólido `csg` se modifican.
 //
 //     A.intersect(B)
 //
