@@ -380,7 +380,7 @@ class Plane {
             polygonType |= type;
             types.push(type);
         }
-        // Put the polygon in the correct list, splitting it when necessary.
+        // Coloca el polígono en la lista correcta, dividiéndolo cuando sea necesario.
         switch (polygonType) {
             case COPLANAR:
                 ;
@@ -418,8 +418,8 @@ class Plane {
         }
     }
 }
-// `Plane.EPSILON` is the tolerance used by `splitPolygon()` to decide if a
-// point is on the plane.
+// `Plane.EPSILON` es la tolerancia utilizada por `splitPolygon()` para decidir si un
+// el punto está en el plano.
 Plane.EPSILON = 1e-5;
 Plane.fromPoints = function (a, b, c) {
     let n = Vector.tv0.copy(b).sub(a).cross(Vector.tv1.copy(c).sub(a)).normalize();
