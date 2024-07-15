@@ -221,6 +221,75 @@ function limpiarScena() {
     }
 }
 
+function descargarModelos() {
+    let cuerpo = { 
+        cuerpo: null,
+        buzo: null,
+        pantalon: null,
+        superior: null,
+        zapatilla: null
+    };
+    let cabeza = {
+        cabeza: null,
+        orejas: null,
+        ojos: null,
+        nariz: null,
+        cejas: null,
+        pelo: null
+    };
+    for (let i = scene.children.length - 1; 0 < i; i--) {
+        let obj = ((scene.children[i].name).split("_")[0]).split("$")[0];
+        switch (obj) {
+            case "cuerpo":
+            case "buzo":
+            case "pantalon":
+            case "pulsera":
+            case "superior":
+            case "zapatilla":
+            case "mano-derecha":
+            case "mano-izquierda":
+            case "anillo":
+            case "conjunto":
+            case "mochila":
+            case "pulsera-de":
+            case "pulsera-iz":
+                cuerpo[obj] = scene.children[i];
+            break;
+            default:
+                cabeza[obj] = scene.children[i];
+            break;
+        }
+        scene.remove(scene.children[i]);
+    }
+    for (let key in cuerpo) {
+        if (cuerpo.hasOwnProperty(key)) {
+            let group = cuerpo[key];
+            if (group) {
+            scene.add(group);
+            }
+        }
+    }
+    descargarStl(scene, "cuerpo");
+    limpiarScena();
+    for (let key in cabeza) {
+        if (cabeza.hasOwnProperty(key)) {
+            let group = cabeza[key];
+            if (group) {
+                scene.add(group);
+            }
+        }
+    }
+    descargarStl(scene, "cabeza");
+    for (let key in cuerpo) {
+        if (cuerpo.hasOwnProperty(key)) {
+            let group = cuerpo[key];
+            if (group) {
+                scene.add(group);
+            }
+        }
+    }
+}
+
 document.getElementById("unirSTL").addEventListener("click", function () {
     unirSTL();
 });
@@ -230,7 +299,7 @@ document.getElementById("descargarPruebaStl").addEventListener("click", function
 });
 
 document.getElementById("descargarstl").addEventListener("click", function () {
-    descargarStl(scene, "modelo");
+    descargarModelos();
 });
 
 
