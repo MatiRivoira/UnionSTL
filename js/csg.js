@@ -236,12 +236,12 @@ CSG.toMesh = function (csg, toMatrix, toMaterial) {
     m.castShadow = m.receiveShadow = true;
     return m;
 };
-// # class Vector
-// Represents a 3D vector.
+// # vector de clase
+// Representa un vector 3D.
 //
-// Example usage:
+// Ejemplo de uso:
 //
-//     new CSG.Vector(1, 2, 3);
+// nuevo CSG.Vector(1, 2, 3);
 class Vector {
     constructor(x = 0, y = 0, z = 0) {
         this.x = x;
