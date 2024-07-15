@@ -334,8 +334,8 @@ class Vertex {
     clone() {
         return new Vertex(this.pos, this.normal, this.uv, this.color);
     }
-    // Invert all orientation-specific data (e.g. vertex normal). Called when the
-    // orientation of a polygon is flipped.
+    // Invertir todos los datos específicos de la orientación (por ejemplo, vértice normal). Llamado cuando el
+    // se invierte la orientación de un polígono.
     flip() {
         this.normal.negate();
     }
