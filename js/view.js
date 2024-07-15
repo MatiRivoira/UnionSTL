@@ -167,29 +167,52 @@ function descargarStl(scena, nombre) {
 }
 
 function unirSTL() {
-    // Make a box mesh
-    const box = new THREE.Mesh(
-        new THREE.BoxGeometry(2, 2, 2),
-        new THREE.MeshNormalMaterial()
-    );
-    // make a sphere mesh
-    const sphere = new THREE.Mesh(new THREE.SphereGeometry(1.2, 30, 30));
+     // create 3 cylinders and union them
+     const cylinderMesh1 = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.85, 0.85, 2, 8, 1, false),
+        new THREE.MeshStandardMaterial({
+            color: 0xffbf00,
+        })
+    )
+    const cylinderMesh2 = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.85, 0.85, 2, 8, 1, false),
+        new THREE.MeshStandardMaterial({
+            color: 0x00ff00,
+        })
+    )
+    const cylinderMesh3 = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.85, 0.85, 2, 8, 1, false),
+        new THREE.MeshStandardMaterial({
+            color: 0x9f2b68,
+        })
+    )
+    cylinderMesh1.position.set(1, 0, -6)
+    scene.add(cylinderMesh1)
+    cylinderMesh2.position.set(3, 0, -6)
+    cylinderMesh2.geometry.rotateX(Math.PI / 2)
+    scene.add(cylinderMesh2)
+    cylinderMesh3.position.set(5, 0, -6)
+    cylinderMesh3.geometry.rotateZ(Math.PI / 2)
+    scene.add(cylinderMesh3)
 
-    // Make sure the .matrix of each mesh is current
-    box.updateMatrix();
-    sphere.updateMatrix();
+    const cylinderCSG1 = CSG.fromMesh(cylinderMesh1, 2)
+    const cylinderCSG2 = CSG.fromMesh(cylinderMesh2, 3)
+    const cylinderCSG3 = CSG.fromMesh(cylinderMesh3, 4)
+    const cylindersUnionCSG = cylinderCSG1.union(
+        cylinderCSG2.union(cylinderCSG3)
+    )
 
-    // perform operations on the meshes
-    const subRes = CSG.subtract(box, sphere);
-    const unionRes = CSG.union(box, sphere);
-    const interRes = CSG.intersect(box, sphere);
-
-    // space the meshes out so they don't overlap
-    unionRes.position.add(new THREE.Vector3(0, 0, 5));
-    interRes.position.add(new THREE.Vector3(0, 0, -5));
-
-    // add the meshes to the scene
-    scene.add(subRes, unionRes, interRes);
+    const cylindersUnionMesh = CSG.toMesh(
+        cylindersUnionCSG,
+        new THREE.Matrix4()
+    )
+    cylindersUnionMesh.material = [
+        cylinderMesh1.material,
+        cylinderMesh2.material,
+        cylinderMesh3.material,
+    ]
+    cylindersUnionMesh.position.set(2.5, 0, -3)
+    scene.add(cylindersUnionMesh)
 }
 
 function limpiarScena() {
@@ -200,6 +223,10 @@ function limpiarScena() {
 
 document.getElementById("unirSTL").addEventListener("click", function () {
     unirSTL();
+});
+
+document.getElementById("descargarPruebaStl").addEventListener("click", function () {
+    descargarStl(scene, "pruebaSTL");
 });
 
 document.getElementById("descargarstl").addEventListener("click", function () {
