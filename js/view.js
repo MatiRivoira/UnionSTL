@@ -19,7 +19,7 @@ function cargarModelo(url, prueba) {
         if (prueba) {
             scene.add(model.children[3]);
         } else {
-            scene.add(model);
+            scene.add(model.children[0]);
         }
         let obj = (nombreModelo.split("_"))[0];
         ponerTextura(nombreModelo, obj);
