@@ -181,7 +181,7 @@ function unirSTL() {
     cubeMesh.position.set(-2, 1.5, -3)
     scene.add(cubeMesh)
 
-    setTimeout(()=>{ //Se utiliza el timeout para que cargue bien el modelo
+    setTimeout(()=>{ //Se utiliza el timeout para que cargue bien el modelo, solo en el caso de la prueba, ya que se carga el modelo directamente en esta funcion.
 
         const material = new THREE.MeshPhysicalMaterial({
             color: 0xb2ffc8,
@@ -201,16 +201,20 @@ function unirSTL() {
         const mesh = new THREE.Mesh(
             scene.children[2].geometry.clone(),
             new THREE.MeshPhongMaterial({ color: 0x00ff00 })
-        ) // se clona la geometria del modelo correspondiente a unir, sacandolo de la scene
+        ) // se clona la geometria del modelo correspondiente a unir, sacandolo de la escena, se debe hacer con las 2 partes en caso de sacar 2 de la escena.
 
         const monkeyMeshCSG = CSG.fromMesh(mesh)
 
         let cubeMonkeyMeshUnion;
-        const cubeMonkeyMeshUnionCSG = cubeCSG.union(monkeyMeshCSG.clone())
+        const cubeMonkeyMeshUnionCSG = cubeCSG.union(monkeyMeshCSG.clone()) //aca se une los objetos en ves de cube seria otro modelo de la escena, y luego se guarda simplemente en una const.
         cubeMonkeyMeshUnion = CSG.toMesh(cubeMonkeyMeshUnionCSG, new THREE.Matrix4())
         cubeMonkeyMeshUnion.material = material
         cubeMonkeyMeshUnion.position.set(3, 1.5, 0)
         scene.add(cubeMonkeyMeshUnion)
+
+        // NOTA
+        // en este caso solo se hace con 2 modelos, cuando se carga una cabeza seguramente haya mas de 2, por ende este proceso se tiene que repetir ya que se puede hacer solo de a 2 modelos.
+        // para seguir debes usar en este caso cubeMonkeyMeshUnionCSG y este unirlo con otro modelo de la escena, y asi constantemente hasta que no quede ninguno sin unir.
     },500);
 
     
