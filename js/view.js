@@ -8,7 +8,7 @@ const scene = new THREE.Scene();
 
 // Importacion de meshs
 const gltfLoader = new GLTFLoader();
-function cargarModelo(url) {
+function cargarModelo(url, prueba) {
     gltfLoader.load(url, function (gltf) {
         let parts = url.split('/');
         let nombreModelo = (parts[parts.length - 1]).split('.')[0];
@@ -16,7 +16,11 @@ function cargarModelo(url) {
         model.position.set(0, 0.1, 0); 
         model.name = nombreModelo + "Group";
         model.children[0].name = nombreModelo;
-        scene.add(model);
+        if (prueba) {
+            scene.add(model.children[3]);
+        } else {
+            scene.add(model);
+        }
         let obj = (nombreModelo.split("_"))[0];
         ponerTextura(nombreModelo, obj);
     },
@@ -167,52 +171,50 @@ function descargarStl(scena, nombre) {
 }
 
 function unirSTL() {
-     // create 3 cylinders and union them
-     const cylinderMesh1 = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.85, 0.85, 2, 8, 1, false),
-        new THREE.MeshStandardMaterial({
-            color: 0xffbf00,
-        })
-    )
-    const cylinderMesh2 = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.85, 0.85, 2, 8, 1, false),
-        new THREE.MeshStandardMaterial({
-            color: 0x00ff00,
-        })
-    )
-    const cylinderMesh3 = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.85, 0.85, 2, 8, 1, false),
-        new THREE.MeshStandardMaterial({
-            color: 0x9f2b68,
-        })
-    )
-    cylinderMesh1.position.set(1, 0, -6)
-    scene.add(cylinderMesh1)
-    cylinderMesh2.position.set(3, 0, -6)
-    cylinderMesh2.geometry.rotateX(Math.PI / 2)
-    scene.add(cylinderMesh2)
-    cylinderMesh3.position.set(5, 0, -6)
-    cylinderMesh3.geometry.rotateZ(Math.PI / 2)
-    scene.add(cylinderMesh3)
 
-    const cylinderCSG1 = CSG.fromMesh(cylinderMesh1, 2)
-    const cylinderCSG2 = CSG.fromMesh(cylinderMesh2, 3)
-    const cylinderCSG3 = CSG.fromMesh(cylinderMesh3, 4)
-    const cylindersUnionCSG = cylinderCSG1.union(
-        cylinderCSG2.union(cylinderCSG3)
+    cargarModelo("../assets/models/monkey.glb", true); // el true es para la prueba del mono
+    //? se agrega un cubo
+    const cubeMesh = new THREE.Mesh(
+        new THREE.BoxGeometry(1, 2, 2),
+        new THREE.MeshPhongMaterial({ color: 0xff0000 })
     )
+    cubeMesh.position.set(-2, 1.5, -3)
+    scene.add(cubeMesh)
 
-    const cylindersUnionMesh = CSG.toMesh(
-        cylindersUnionCSG,
-        new THREE.Matrix4()
-    )
-    cylindersUnionMesh.material = [
-        cylinderMesh1.material,
-        cylinderMesh2.material,
-        cylinderMesh3.material,
-    ]
-    cylindersUnionMesh.position.set(2.5, 0, -3)
-    scene.add(cylindersUnionMesh)
+    setTimeout(()=>{ //Se utiliza el timeout para que cargue bien el modelo
+
+        const material = new THREE.MeshPhysicalMaterial({
+            color: 0xb2ffc8,
+            metalness: 0.5,
+            roughness: 0.1,
+            transparent: true,
+            opacity: 0.5,
+            //transmission: .9,
+            side: THREE.DoubleSide,
+            flatShading: true,
+        }) // material de prueba
+
+        const cubeCSG = CSG.fromGeometry(
+            cubeMesh.geometry.clone().translate(-0.5, 0, 0)
+        )
+
+        const mesh = new THREE.Mesh(
+            scene.children[2].geometry.clone(),
+            new THREE.MeshPhongMaterial({ color: 0x00ff00 })
+        ) // se clona la geometria del modelo correspondiente a unir, sacandolo de la scene
+
+        const monkeyMeshCSG = CSG.fromMesh(mesh)
+
+        let cubeMonkeyMeshUnion;
+        const cubeMonkeyMeshUnionCSG = cubeCSG.union(monkeyMeshCSG.clone())
+        cubeMonkeyMeshUnion = CSG.toMesh(cubeMonkeyMeshUnionCSG, new THREE.Matrix4())
+        cubeMonkeyMeshUnion.material = material
+        cubeMonkeyMeshUnion.position.set(3, 1.5, 0)
+        scene.add(cubeMonkeyMeshUnion)
+    },500);
+
+    
+    
 }
 
 function limpiarScena() {

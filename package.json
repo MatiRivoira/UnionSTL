@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "three": "^0.165.0",
+    "three-bvh-csg": "^0.0.16",
     "three-js-csg": "^72.0.0"
   }
 }
