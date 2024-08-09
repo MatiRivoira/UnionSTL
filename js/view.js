@@ -160,7 +160,37 @@ scene.add(light)
 animate();
 
 const exporter = new STLExporter();
-function descargarStl(scena, nombre) {
+async function descargarStl(scena, nombre) {
+    var modeloUnido = undefined;
+    scena.children.forEach(element => {
+        if (element.type != "AmbientLight") {
+            if (!modeloUnido) {
+                modeloUnido = element;
+            } else {
+                const meshUnido = new THREE.Mesh(
+                    modeloUnido.geometry.clone(),
+                    new THREE.MeshPhongMaterial({ color: 0x00ff00 })
+                ); 
+
+                const meshCsg = CSG.fromMesh(meshUnido);
+
+                const mesh2 = new THREE.Mesh(
+                    element.geometry.clone(),
+                    new THREE.MeshPhongMaterial({ color: 0x00ff00 })
+                ); 
+        
+                const meshCsg2 = CSG.fromMesh(mesh2);
+
+                const MeshUnionCSG = meshCsg.union(meshCsg2.clone());
+                modeloUnido = CSG.toMesh(MeshUnionCSG, new THREE.Matrix4());        
+                modeloUnido.position.set(3, 1.5, 0); //simplemente lo pone en otra posicion para apreciar el cambio, en el caso del monono deberia quedar en el mismo lugar, y eliminar los modelos despues de unirlo todo.
+            
+            }
+        }
+    });
+    limpiarScena();
+    scene.add(modeloUnido)
+   
     let stlData = exporter.parse(scena, { binary: true });
     let blob = new Blob([stlData], { type: 'application/octet-stream' });
     let url = URL.createObjectURL(blob);
@@ -271,7 +301,7 @@ function descargarModelos() {
         if (cuerpo.hasOwnProperty(key)) {
             let group = cuerpo[key];
             if (group) {
-            scene.add(group);
+                scene.add(group);
             }
         }
     }
