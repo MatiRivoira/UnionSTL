@@ -255,7 +255,7 @@ function limpiarScena() {
     }
 }
 
-function descargarModelos() {
+async function descargarModelos() {
     let cuerpo = { 
         cuerpo: null,
         buzo: null,
@@ -303,7 +303,7 @@ function descargarModelos() {
             }
         }
     }
-    descargarStl(scene, "cuerpo");
+    await descargarStl(scene, "cuerpo");
     limpiarScena();
     for (let key in cabeza) {
         if (cabeza.hasOwnProperty(key)) {
@@ -313,7 +313,7 @@ function descargarModelos() {
             }
         }
     }
-    descargarStl(scene, "cabeza");
+    await descargarStl(scene, "cabeza");
     for (let key in cuerpo) {
         if (cuerpo.hasOwnProperty(key)) {
             let group = cuerpo[key];
