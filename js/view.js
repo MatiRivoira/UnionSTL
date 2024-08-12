@@ -183,8 +183,6 @@ async function descargarStl(scena, nombre) {
 
                 const MeshUnionCSG = meshCsg.union(meshCsg2.clone());
                 modeloUnido = CSG.toMesh(MeshUnionCSG, new THREE.Matrix4());        
-                modeloUnido.position.set(3, 1.5, 0); //simplemente lo pone en otra posicion para apreciar el cambio, en el caso del monono deberia quedar en el mismo lugar, y eliminar los modelos despues de unirlo todo.
-            
             }
         }
     });
