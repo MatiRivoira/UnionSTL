@@ -159,45 +159,6 @@ scene.add(light)
 // Iniciar renderizacion 
 animate();
 
-const exporter = new STLExporter();
-async function descargarStl(scena, nombre) {
-    var modeloUnido = undefined;
-    scena.children.forEach(element => {
-        if (element.type != "AmbientLight") {
-            if (!modeloUnido) {
-                modeloUnido = element;
-            } else {
-                const meshUnido = new THREE.Mesh(
-                    modeloUnido.geometry.clone(),
-                    new THREE.MeshPhongMaterial({ color: 0x00ff00 })
-                ); 
-
-                const meshCsg = CSG.fromMesh(meshUnido);
-
-                const mesh2 = new THREE.Mesh(
-                    element.geometry.clone(),
-                    new THREE.MeshPhongMaterial({ color: 0x00ff00 })
-                ); 
-        
-                const meshCsg2 = CSG.fromMesh(mesh2);
-
-                const MeshUnionCSG = meshCsg.union(meshCsg2.clone());
-                modeloUnido = CSG.toMesh(MeshUnionCSG, new THREE.Matrix4());        
-            }
-        }
-    });
-    limpiarScena();
-    scene.add(modeloUnido)
-   
-    let stlData = exporter.parse(scena, { binary: true });
-    let blob = new Blob([stlData], { type: 'application/octet-stream' });
-    let url = URL.createObjectURL(blob);
-    let link = document.createElement('a');
-    link.href = url;
-    link.download = nombre + '.stl';
-    link.click();
-}
-
 function unirSTL() {
 
     cargarModelo("../assets/models/monkey.glb", true); // el true es para la prueba del mono
@@ -249,80 +210,107 @@ function unirSTL() {
     
 }
 
+cargarModelo("../assets/models/cabeza_1.gltf"); 
+cargarModelo("../assets/models/cuerpo_1.gltf");
+cargarModelo("../assets/models/pelo_1.gltf");
+cargarModelo("../assets/models/zapatilla_1.gltf");
+
+const exporter = new STLExporter();
+async function descargarStl(scena, nombre) {
+    let modeloUnido = null;
+
+    scena.children.forEach(element => {
+        if (element.type !== "AmbientLight") {
+            if (!modeloUnido) {
+                modeloUnido = element;
+            } else {
+                const meshUnido = crearMeshConMaterial(modeloUnido);
+                const meshCsg = CSG.fromMesh(meshUnido);
+
+                const mesh2 = crearMeshConMaterial(element);
+                const meshCsg2 = CSG.fromMesh(mesh2);
+
+                const meshUnionCSG = meshCsg.union(meshCsg2.clone());
+                modeloUnido = CSG.toMesh(meshUnionCSG, new THREE.Matrix4());
+            }
+        }
+    });
+
+    limpiarScena();
+    scene.add(modeloUnido);
+
+    const stlData = exporter.parse(scena, { binary: true });
+    descargarArchivo(stlData, `${nombre}.stl`);
+}
+
+function crearMeshConMaterial(element) {
+    return new THREE.Mesh(
+        element.geometry.clone(),
+        new THREE.MeshPhongMaterial({ color: 0x00ff00 })
+    );
+}
+
 function limpiarScena() {
     for (let i = scene.children.length - 1; i > 0; i--) {
         scene.remove(scene.children[i]);
     }
 }
 
+function descargarArchivo(data, nombre) {
+    const blob = new Blob([data], { type: 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = nombre;
+    link.click();
+}
+
 async function descargarModelos() {
-    let cuerpo = { 
-        cuerpo: null,
-        buzo: null,
-        pantalon: null,
-        superior: null,
-        zapatilla: null
-    };
-    let cabeza = {
-        cabeza: null,
-        orejas: null,
-        ojos: null,
-        nariz: null,
-        cejas: null,
-        pelo: null
-    };
-    for (let i = scene.children.length - 1; 0 < i; i--) {
-        let obj = ((scene.children[i].name).split("_")[0]).split("$")[0];
-        switch (obj) {
-            case "cuerpo":
-            case "buzo":
-            case "pantalon":
-            case "pulsera":
-            case "superior":
-            case "zapatilla":
-            case "mano-derecha":
-            case "mano-izquierda":
-            case "anillo":
-            case "conjunto":
-            case "mochila":
-            case "pulsera-de":
-            case "pulsera-iz":
-                cuerpo[obj] = scene.children[i];
-            break;
-            default:
-                cabeza[obj] = scene.children[i];
-            break;
+    const cuerpo = {};
+    const cabeza = {};
+
+    for (let i = scene.children.length - 1; i > 0; i--) {
+        const obj = ((scene.children[i].name).split("_")[0]).split("$")[0];
+        if (esParteDelCuerpo(obj)) {
+            cuerpo[obj] = scene.children[i];
+        } else {
+            cabeza[obj] = scene.children[i];
         }
         scene.remove(scene.children[i]);
     }
-    for (let key in cuerpo) {
-        if (cuerpo.hasOwnProperty(key)) {
-            let group = cuerpo[key];
-            if (group) {
-                scene.add(group);
-            }
+
+    await procesarYDescargar(cuerpo, "cuerpo");
+    await procesarYDescargar(cabeza, "cabeza");
+
+    restaurarEscena(cuerpo);
+}
+
+function esParteDelCuerpo(obj) {
+    return [
+        "cuerpo", "buzo", "pantalon", "pulsera", "superior", "zapatilla",
+        "mano-derecha", "mano-izquierda", "anillo", "conjunto", "mochila",
+        "pulsera-de", "pulsera-iz"
+    ].includes(obj);
+}
+
+async function procesarYDescargar(partes, nombre) {
+    for (const key in partes) {
+        if (partes[key]) {
+            scene.add(partes[key]);
         }
     }
-    await descargarStl(scene, "cuerpo");
+    await descargarStl(scene, nombre);
     limpiarScena();
-    for (let key in cabeza) {
-        if (cabeza.hasOwnProperty(key)) {
-            let group = cabeza[key];
-            if (group) {
-                scene.add(group);
-            }
-        }
-    }
-    await descargarStl(scene, "cabeza");
-    for (let key in cuerpo) {
-        if (cuerpo.hasOwnProperty(key)) {
-            let group = cuerpo[key];
-            if (group) {
-                scene.add(group);
-            }
+}
+
+function restaurarEscena(partes) {
+    for (const key in partes) {
+        if (partes[key]) {
+            scene.add(partes[key]);
         }
     }
 }
+
 
 document.getElementById("unirSTL").addEventListener("click", function () {
     unirSTL();
