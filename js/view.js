@@ -282,6 +282,7 @@ async function descargarModelos() {
     await procesarYDescargar(cuerpo, "cuerpo");
     await procesarYDescargar(cabeza, "cabeza");
 
+    restaurarEscena(cabeza);
     restaurarEscena(cuerpo);
 }
 
