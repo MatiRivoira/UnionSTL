@@ -210,11 +210,6 @@ function unirSTL() {
     
 }
 
-cargarModelo("../assets/models/cabeza_1.gltf"); 
-cargarModelo("../assets/models/cuerpo_1.gltf");
-cargarModelo("../assets/models/pelo_1.gltf");
-cargarModelo("../assets/models/zapatilla_1.gltf");
-
 const exporter = new STLExporter();
 async function descargarStl(scena, nombre) {
     let modeloUnido = null;
