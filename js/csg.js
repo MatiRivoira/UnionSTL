@@ -50,7 +50,7 @@ class CSG {
         return CSG.fromPolygons(a.allPolygons());
     }
     // Devuelve un nuevo CSG sólido con espacio sólido y vacío cambiado. Este sólido es
-    // no modificado.
+    // no modificado. 
     inverse() {
         let csg = this.clone();
         csg.polygons.forEach((p) => p.flip());
