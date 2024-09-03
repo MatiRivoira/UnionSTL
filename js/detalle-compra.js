@@ -369,5 +369,5 @@ document.getElementById("descargar").addEventListener("click", function () {
 cargarModelo("../assets/models/cabeza_1.gltf")
 cargarModelo("../assets/models/cejas_1.gltf")
 cargarModelo("../assets/models/cuerpo_1.gltf")
- cargarModelo("../assets/models/pelo_1.gltf")
+cargarModelo("../assets/models/pelo_1.gltf")
 cargarModelo("../assets/models/zapatilla_1.gltf")
