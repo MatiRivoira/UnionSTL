@@ -1,3 +1,112 @@
+const userLang = navigator.language || navigator.userLanguage;
+
+document.addEventListener('DOMContentLoaded', function() {
+    const divDetalles = document.getElementById('detalleDelPedido');
+    const detalles = JSON.parse(localStorage.getItem("detalle-compra"));
+    if (detalles) {
+        let paquete = detalles.paquete.split('_')[0].toUpperCase();
+        let codigo = detalles.codigo;
+        if (!codigo) {
+            codigo = "Ninguno";
+        }
+        if (userLang.includes("es")) {
+            if (paquete == "IMPRESO") {
+                divDetalles.innerHTML = `  
+                <ul>
+                    <li><strong>Orden ID:</strong> ${detalles.ordenID}</li>
+                    <li><strong>Nombre:</strong> ${detalles.nombre}</li>
+                    <li><strong>Email:</strong> ${detalles.email}</li>
+                    <li><strong>Pais:</strong> ${detalles.pais}</li>
+                    <li><strong>Ciudad:</strong> ${detalles.ciudad}</li>
+                    <li><strong>Direccion:</strong> ${detalles.direccion}</li>
+                    <li><strong>Codigo postal:</strong> ${detalles.cod_postal}</li>
+                    <li><strong>Telefono:</strong> ${detalles.telefono}</li>
+                    <li><strong>Paquete:</strong> ${paquete}</li>
+                    <li><strong>Código promocional:</strong> ${codigo}</li>
+                    <li><strong>Descuento:</strong> ${detalles.descuento} USD</li>
+                    <li><strong>Precio:</strong> $${detalles.precio} USD</li>
+                    <li><strong>Fecha:</strong> ${detalles.hora} </li>
+                </ul>`;
+            } else {
+                divDetalles.innerHTML = `  
+                <ul>
+                    <li><strong>Orden ID:</strong> ${detalles.ordenID}</li>
+                    <li><strong>Nombre:</strong> ${detalles.nombre}</li>
+                    <li><strong>Email:</strong> ${detalles.email}</li>
+                    <li><strong>Paquete:</strong> ${paquete}</li>
+                    <li><strong>Código:</strong> ${codigo}</li>
+                    <li><strong>Descuento:</strong> ${detalles.descuento} USD</li>
+                    <li><strong>Precio:</strong> $${detalles.precio} USD</li>
+                    <li><strong>Fecha:</strong> ${detalles.hora} </li>
+                </ul>`;
+            }
+        } else {
+            if (paquete == "IMPRESO") {
+                divDetalles.innerHTML = `  
+                <ul>
+                    <li><strong>Order ID:</strong> ${detalles.ordenID}</li>
+                    <li><strong>Name:</strong> ${detalles.nombre}</li>
+                    <li><strong>Email:</strong> ${detalles.email}</li>
+                    <li><strong>Country:</strong> ${detalles.pais}</li>
+                    <li><strong>City:</strong> ${detalles.ciudad}</li>
+                    <li><strong>Address:</strong> ${detalles.direccion}</li>
+                    <li><strong>Postal Code:</strong> ${detalles.cod_postal}</li>
+                    <li><strong>Phone:</strong> ${detalles.telefono}</li>
+                    <li><strong>Package:</strong> ${paquete}</li>
+                    <li><strong>Promotional Code:</strong> ${codigo}</li>
+                    <li><strong>Discount:</strong> ${detalles.descuento} USD</li>
+                    <li><strong>Price:</strong> $${detalles.precio} USD</li>
+                    <li><strong>Date:</strong> ${detalles.hora} </li>
+                </ul>`;
+            } else {
+                divDetalles.innerHTML = `  
+                <ul>
+                    <li><strong>Order ID:</strong> ${detalles.ordenID}</li>
+                    <li><strong>Name:</strong> ${detalles.nombre}</li>
+                    <li><strong>Email:</strong> ${detalles.email}</li>
+                    <li><strong>Package:</strong> ${paquete}</li>
+                    <li><strong>Code:</strong> ${codigo}</li>
+                    <li><strong>Discount:</strong> ${detalles.descuento} USD</li>
+                    <li><strong>Price:</strong> $${detalles.precio} USD</li>
+                    <li><strong>Date:</strong> ${detalles.hora} </li>
+                </ul>`;
+            }
+            
+        }
+        if (detalles.estado) {
+            document.getElementById("title").innerHTML = "";
+        } else {
+            guardarPedido(detalles);
+        }
+    }
+});
+
+function guardarPedido(nuevoPedido) {
+    // Convertir el nuevo pedido a una cadena JSON
+    const nuevoPedidoJSON = JSON.stringify(nuevoPedido);
+    // Obtener la lista de pedidos existente del localStorage
+    const pedidosExistentes = localStorage.getItem('mis-pedidos');
+    if (pedidosExistentes) {
+      // Si ya existen pedidos, convertir la cadena almacenada a un arreglo de objetos
+        const pedidos = JSON.parse(pedidosExistentes);
+      // Verificar si el pedido ya existe
+        const pedidoYaExiste = pedidos.some(pedido => JSON.stringify(pedido) === nuevoPedidoJSON);
+        if (!pedidoYaExiste) {
+            // Si el pedido no existe, agregar el nuevo pedido al arreglo y actualizar el localStorage
+            pedidos.push(nuevoPedido);
+            localStorage.setItem('mis-pedidos', JSON.stringify(pedidos));
+        } else {
+            console.log('El pedido ya existe en el almacenamiento.');
+        }
+    } else {
+      // Si no existen pedidos, crear un nuevo arreglo con el pedido actual y guardarlo
+        localStorage.setItem('mis-pedidos', JSON.stringify([nuevoPedido]));
+    }
+}
+
+
+
+//* FUNCIONES DE DESCARGA
 import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
 import { OrbitControls } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js";
 import { STLExporter } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/exporters/STLExporter.js';
@@ -29,22 +138,10 @@ function cargarModelo(url, prueba) {
     );
 }
 
-function ponerTextura(nombreModelo, obj) {
-    scene.getObjectByName(nombreModelo).material = new THREE.MeshStandardMaterial({
-        name: obj,
-        map: new THREE.TextureLoader().load("./assets/texturas/baseColor.png"),
-        roughnessMap: new THREE.TextureLoader().load(`./assets/texturas/roughness.png`),
-        metalnessMap: new THREE.TextureLoader().load(`./assets/texturas/metallic.png`)
-    });
-}
-
-
-document.getElementById("frmCargarModelo").addEventListener('submit', function(event) {
-    event.preventDefault();
+//cargarMonono();
+function cargarMonono(){
     limpiarScena();
-    let codigo = document.getElementById("codigoModelo").value;
-    document.getElementById("codigoModelo").value = codigo;
-    const modelos = JSON.parse(codigo);
+    const modelos = JSON.parse(`{"cabeza":"cabeza_1","cuerpo":"cuerpo_2","oreja":"oreja_1","ojos":"ojos_5","nariz":"nariz_1","cejas":"cejas_3","pelo":"pelo_38","conjunto":"conjunto_10","lunare":"","delineado":"delineado","zapatilla":"zapatilla_3","mochila":"mochila","arito":"arito_6,arito_7","lente":"lente","gorra":"gorra_6","anillo":"anillo_2","pulsera-iz":"pulsera-iz_1","pulsera-de":"pulsera-de"}`);
     for (let key in modelos) {
         if (modelos.hasOwnProperty(key)) {
             let obj = key.split('_')[0];
@@ -88,7 +185,16 @@ document.getElementById("frmCargarModelo").addEventListener('submit', function(e
             }
         }
     }
-});
+};
+
+function ponerTextura(nombreModelo, obj) {
+    scene.getObjectByName(nombreModelo).material = new THREE.MeshStandardMaterial({
+        name: obj,
+        map: new THREE.TextureLoader().load("./assets/texturas/baseColor.png"),
+        roughnessMap: new THREE.TextureLoader().load(`./assets/texturas/roughness.png`),
+        metalnessMap: new THREE.TextureLoader().load(`./assets/texturas/metallic.png`)
+    });
+}
 
 // Camara
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -159,8 +265,6 @@ scene.add(light)
 // Iniciar renderizacion 
 animate();
 
-cargarModelo("../assets/models/cabeza_1.gltf")
-cargarModelo("../assets/models/delineado_1.gltf")
 const exporter = new STLExporter();
 async function descargarStl(scena, nombre) {
     let modeloUnido = null;
@@ -228,8 +332,8 @@ async function descargarModelos() {
     await procesarYDescargar(cuerpo, "cuerpo");
     await procesarYDescargar(cabeza, "cabeza");
 
-    restaurarEscena(cabeza);
-    restaurarEscena(cuerpo);
+    restaurarEscena(cuerpo)
+    restaurarEscena(cabeza)
 }
 
 function esParteDelCuerpo(obj) {
@@ -258,10 +362,12 @@ function restaurarEscena(partes) {
     }
 }
 
-document.getElementById("descargarstl").addEventListener("click", function () {
+document.getElementById("descargar").addEventListener("click", function () {
     descargarModelos();
 });
 
-document.getElementById("limpiar").addEventListener("click", function () {
-    limpiarScena();
-});
+cargarModelo("../assets/models/cabeza_1.gltf")
+//cargarModelo("../assets/models/cejas_1.gltf")
+// cargarModelo("../assets/models/cuerpo_1.gltf")
+ cargarModelo("../assets/models/pelo_1.gltf")
+// cargarModelo("../assets/models/zapatilla_1.gltf")
