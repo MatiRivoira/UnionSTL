@@ -321,6 +321,8 @@ async function descargarModelos() {
 
     for (let i = scene.children.length - 1; i > 0; i--) {
         const obj = ((scene.children[i].name).split("_")[0]).split("$")[0];
+        console.log(obj);
+        
         if (esParteDelCuerpo(obj)) {
             cuerpo[obj] = scene.children[i];
         } else {
@@ -366,8 +368,8 @@ document.getElementById("descargar").addEventListener("click", function () {
     descargarModelos();
 });
 
-cargarModelo("../assets/models/cabeza_1.gltf")
-cargarModelo("../assets/models/cejas_1.gltf")
-cargarModelo("../assets/models/cuerpo_1.gltf")
-cargarModelo("../assets/models/pelo_1.gltf")
-cargarModelo("../assets/models/zapatilla_1.gltf")
+cargarModelo("../assets/models/cabeza.gltf")
+cargarModelo("../assets/models/cuerpo.gltf")
+cargarModelo("../assets/models/nariz.gltf")
+cargarModelo("../assets/models/lente.gltf")
+cargarModelo("../assets/models/pantalon$Corto.gltf") 
